@@ -9,7 +9,7 @@ class Vodic
 
 	end
 
-	def Inicijaliziraj(path=nil)
+	def initialize(path=nil)
 		Restorant.filepath = path
 
 		if Restorant.postoi_baza?
@@ -18,9 +18,7 @@ class Vodic
 			puts "Sozdadena e bazata na restorani."
 		else
 			puts "Se gasam.\n\n"
-			exit!
-
-				
+			exit!	
 	end
 
 	def lansiraj!
@@ -52,13 +50,29 @@ class Vodic
 		when 'prebaraj'
 			puts 'Prebaruvanje...'
 		when 'dodaj'
-			puts 'Dodavanje...'
+			dodaj
 		when 'izlezi'
 			return :quit
 		else
 			puts "\nZalam, ne ja razbiram ovaa komanda.\n\n"
 		end
+	end
 
+	def dodaj
+		puts "\nDodaj restorant\n\n".upcase
+		restorant = Restorant.new
+
+		print "Ime na restoranot: "
+		restorant.ime = gets.chome.strip
+		print "Vid na gotvenje: "
+		restorant.kujna = gets.chome.strip
+		print "Procesna cena: "
+		restorant.cena = gets.chome.strip
+
+		if restorant.zacuvaj
+			puts "\nRestorantot e dodaden\n\n"
+		else
+			puts "\nNastana greska: restorantot ne e dodaden\n\n"
 	end
 
 	def voved
@@ -68,6 +82,14 @@ class Vodic
 
 	def zaklucok
 		puts "\n<<< Zbogum i dobar apetit! >>>\n\n\n"
+	end
+
+	def zacuvaj
+		return false unless Restorant.koristi_baza?
+		File.open(@@adresa_na_fajl, "a") do |file|
+			file.puts "#{[@ime, @kujna, @cena].join("\t")}\n"
+		end
+		return true
 	end
 
 end
